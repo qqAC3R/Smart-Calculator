@@ -139,8 +139,8 @@ def add_float():
 
 
 def calculation(operation):
-    global display2, number, str_result, result, calculatorOperation, clear_display1, first_nr, float_bool, float_count, \
-        math_sqrt, math_sqrt_result, half_x_, half_x_result, temp_bool_float_div
+    global display2, number, str_result, result, calculatorOperation, clear_display1, first_nr, float_bool,\
+        float_count, math_sqrt, math_sqrt_result, half_x_, half_x_result, temp_bool_float_div
     # Operation 1 = +
     # Operation 2 = -
     # Operation 3 = x
@@ -251,7 +251,7 @@ def add_nr(nr):
 
 
 def show_history():
-    global display1, frame, result_history, result, str_result, number
+    global display1, frame, result_history, result, str_result, number, delete_user_button
     result = 0
     str_result = ""
     number = 0
@@ -263,28 +263,58 @@ def show_history():
     display1 = tk.Label(frame, text="History", bg='#666666', font=("Arial", 20), fg="red")
     display1.place(relheight=0.1, relwidth=1, rely=0.05)
 
+    delete_user_button = tk.Button(frame, bg='#f7f7f7', fg="black", borderwidth=0, command=lambda: delete_user(),
+                                   text="DELETE")
+    delete_user_button.place(relheight=0.15, relwidth=0.15, relx=0.85, rely=0.85)
+
     temp_string_label = ""
     for i in result_history:
         temp_string_label += i + "\n\n"
     content = tk.Label(frame, text=temp_string_label, bg='#666666', anchor='center', font=("Arial", 20), fg="white")
-    content.place(relheight=0.85, rely=0.2, relx=0.05)
+    content.place(relheight=0.85, relx=.5, rely=.6, anchor="center")
+
+
+def delete_user():
+    # Important variables are reset
+    global result, str_result, number, calculatorOperation, clear_display1, first_nr, \
+        float_bool, float_count, temp_bool_float_div, result_history
+    result_history = []
+    result = 0
+    str_result = ""
+    number = 0
+    calculatorOperation = 0
+    clear_display1 = 0
+    first_nr = 1
+    float_bool = 0
+    float_count = 0
+    temp_bool_float_div = 0
+
+    # Variables based on save history are reset
+    global save_path, history_index, save_path, open_file
+    os.remove(save_path)
+    login()
+    history_index = 0
+    save_path = ""
+    open_file = 0
 
 
 def history_button():
-    global history_index
+    global history_index, delete_user_button
     # History_index - 0 => null
     # History_index - 1 => show calculator
     # History_index - 2 => show history
     if history_index == 1:
         display()
         history_index = 2
+        print("destroy")
     else:
         show_history()
         history_index = 1
 
 
 def login():
-    global display1, display2, frame, result_history, open_file
+    global display1, display2, frame, result_history, open_file, frame
+    frame.destroy()
     frame = tk.Frame(root, bd=10, bg="grey")
     frame['bg'] = '#666666'
     frame.place(relx=0.5, rely=0.2, relwidth=0.8, relheight=0.5, anchor='n')
@@ -452,6 +482,7 @@ button_quit.place(relheight=0.1, relwidth=0.1)
 
 button_history = tk.Button
 frame = tk.Frame()
+delete_user_button = tk.Button
 
 login()
 
